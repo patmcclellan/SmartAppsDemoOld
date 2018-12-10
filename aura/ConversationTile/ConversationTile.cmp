@@ -1,0 +1,102 @@
+<!--
+ - Created by pmcclellan on 1/5/18.
+ -->
+
+<aura:component description="ConversationTile">
+    <aura:attribute name="Conversation" type="Conversation__c"/>
+
+    <aura:attribute name="Today" type="Boolean" default="false"/>
+    <aura:attribute name="Yesterday" type="Boolean" default="false"/>
+    <aura:attribute name="recordLoaded" type="Boolean" default="false"/>
+    <aura:attribute name="TheirColor" type="String"/>
+    <aura:attribute name="menuOpen" type="Boolean" default="false"/>
+    <aura:attribute name="editActive" type="Boolean" default="false"/>
+
+    <!-- register SelectConversation and UpdateConversationFlag events -->
+    <aura:registerEvent name="SelectConversation" type="c:SelectConversation" />
+    <aura:registerEvent name="ConversationEdited" type="c:ConversationEdited" />
+    <aura:registerEvent name="UpdateConversationFlag" type="c:UpdateConversationFlag"/>
+    <aura:registerEvent name="EditRecipients" type="c:EditRecipients"/>
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler name="SelectConversation" action="{!c.markRead}"/>
+
+    <aura:method name="refresh" action="{!c.reloadRecord}" access="public"
+                 description="ConversationFeedController.js invokes refresh whenever a conversation has been updated">
+    </aura:method>
+
+    <!-- layout -->
+    <div class="tile-body">
+        <span onclick="{!c.onSelectConversation}">
+            <div class="slds-border_bottom slds-p-vertical_small">
+                <div class="time-stamp">
+                    <aura:if isTrue="{!v.Today}">
+                        Today,
+                        <lightning:formattedDateTime value="{!v.Conversation.LastMessageDate}"
+                                                     hour="2-digit" minute="2-digit"
+                                                     timeZoneName="short" />
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!v.Yesterday}">
+                                Yesterday,
+                                <lightning:formattedDateTime value="{!v.Conversation.LastMessageDate}"
+                                                             hour="2-digit" minute="2-digit"
+                                                             timeZoneName="short" />
+                                <aura:set attribute="else">
+
+                                 <lightning:formattedDateTime value="{!v.Conversation.LastMessageDate}"
+                                                              month="short" day="numeric" year="numeric"
+                                                              hour="2-digit" minute="2-digit"
+                                                              timeZoneName="short" />
+                                </aura:set>
+                            </aura:if>
+                        </aura:set>
+                    </aura:if>
+                </div>
+
+                <c:GroupDisplay Conversation="{!v.Conversation}" TheirColor="{#v.TheirColor}"/>
+
+                    <!-- Format LastFromInits [right arrow symbol ] LastMessageReceived body -->
+                <div class="last-message">
+                    {!v.Conversation.LastFromInits}▸▸ {!v.Conversation.LastMessageReceived}
+                </div>
+            </div>
+        </span>
+        <aura:if isTrue="{!v.Conversation.Broadcast}">
+            <div class="edit-recipient">
+                <lightning:buttonicon iconName="utility:groups" variant='bare' onclick="{!c.editRecipients}" alternativeText="Edit Recipients"/>
+            </div>
+        </aura:if>
+        <div class="edit-button">
+            <lightning:buttonicon iconName="utility:edit" variant='bare' onclick="{!c.editConversation}" alternativeText="Edit Related Records"/>
+        </div>
+           
+       
+    </div>
+
+    <!-- Edit Conversation Modal -->
+    <aura:if isTrue="{!v.editActive}">
+            <div class="slds-container_fluid">
+                <section>
+                    <div aria-hidden="false" id="editPanel" role="dialog" class="slds-modal slds-fade-in-open slds-backdrop slds-backdrop_open" style="display:block;">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Conversation</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <force:recordEdit recordId="{!v.Conversation.Id}" aura:id='edit' />
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_neutral" onclick="{!c.save}">Save</button> 
+                                <button class="slds-button slds-button_neutral" onclick="{!c.cancel}">Cancel</button>     
+                            </footer>  
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </aura:if>
+        <!-- End Edit Payment Modal -->
+
+</aura:component>

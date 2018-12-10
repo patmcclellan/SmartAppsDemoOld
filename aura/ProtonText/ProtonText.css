@@ -1,0 +1,37 @@
+/**
+ * Created by pmcclellan on 12/20/17.
+ */
+
+ .THIS.tabs{
+    width: 100%;
+    padding: x-small;
+}
+
+.THIS .group-button {
+   padding: small;
+   position: absolute;
+   left: 10px;
+   bottom: 0px;
+}
+
+ .THIS .new-button {
+    padding: small;
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+}
+
+.THIS .flag{
+    font-size: xx-small;
+    padding-top: 14px;
+    padding-left: 144px;
+    margin-bottom: -27px;
+}
+
+.THIS .cancel{
+    font-size: x-large;
+    color: silver;
+    float: right;
+    margin-right: 12px;
+    margin-left: -26px;
+}

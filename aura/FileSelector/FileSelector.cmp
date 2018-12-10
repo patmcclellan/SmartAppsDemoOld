@@ -1,0 +1,85 @@
+<aura:component controller="FileController" >
+
+    <aura:attribute name="accept" type="List" 
+                    default="['.jpeg', '.jpg', '.gif', '.png',
+                    '.pdf', '.txt','.rtf', '.csv', '.zip',
+                    '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.vsd', '.vsdx', 
+                    '.mp4', '.mov',  '.wmv', '.avi', '.m4v',
+                    '.psd', '.bmp', '.ai', '.svg', '.tif', 
+                    '.aif', '.wav', '.m4a', '.wma','.3g2', '.3gp', '.mpg', '.mpeg', '.mp3', 
+                    '.key', '.pages', '.numbers', 
+                    '.gdoc', '.gslides', '.gsheet', '.gdraw', '.gtable', '.gform']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    <aura:attribute name="viewImages" type="Boolean" default="true"/>
+    <aura:attribute name="sendDisabled" type="Boolean" default="true"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="File" type="Object"/>
+    <aura:attribute name="searchKey" type="String" default=""/>
+
+
+    <lightning:overlayLibrary aura:id="fileSelector"/>
+    <aura:registerEvent name="FileUploaded" type="c:FileUploaded"/>
+    <aura:registerEvent name="SendFile" type="c:SendFile" />
+
+    <aura:handler name="SelectFile" event="c:SelectFile" action="{!c.onSelectFile}"/>
+    
+    <lightning:card>
+        <aura:set attribute="title">
+                <lightning:icon iconName="utility:attach" size="small" class="icn-orange"/>
+                Select Image or File to Send 
+        </aura:set>
+        <aura:set attribute="actions">
+            <lightning:buttongroup>
+                <lightning:buttonStateful
+                    labelWhenOff="View Images"
+                    labelWhenOn="Viewing Images"
+                    labelWhenHover="Viewing Images"
+                    iconNameWhenOff="utility:photo"
+                    iconNameWhenOn="utility:photo"
+                    iconNameWhenHover="utility:photo"
+                    state="{! v.viewImages }"
+                    variant="{! v.viewImages ? 'brand' : 'neutral'}"
+                    onclick="{! c.handleViewImages }"
+                />
+                <lightning:buttonStateful
+                    labelWhenOff="View Files"
+                    labelWhenOn="Viewing Files"
+                    labelWhenHover="Viewing Files"
+                    iconNameWhenOff="utility:file"
+                    iconNameWhenOn="utility:file"
+                    iconNameWhenHover="utility:file"
+                    state="{! !v.viewImages }"
+                    variant="{! v.viewImages ? 'neutral' : 'brand'}"
+                    onclick="{! c.handleViewFiles }"
+                />
+            </lightning:buttongroup>
+        </aura:set> 
+
+        <c:FileList recordId="{!v.recordId}" viewImages="{!v.viewImages}" searchKey="{!v.searchKey}"/>
+
+        <aura:set attribute="footer">
+            
+            <lightning:layout horizontalAlign="spread" verticalAlign="center">
+                <lightning:layoutitem>
+                    <lightning:fileUpload   
+                        name="fileUploader"
+                        label= "Upload Images or Files"
+                        multiple="{!v.multiple}"
+                        accept="{!v.accept}"
+                        disabled="{!v.disabled}"
+                        recordId="{!v.recordId}"
+                        onuploadfinished="{! c.handleUploadFinished }"/>
+                </lightning:layoutitem>
+                <lightning:layoutitem>
+                    <lightning:buttonGroup>
+                        <lightning:button   label="Cancel" onclick="{!c.cancelModal}"/>
+                        <lightning:button   label="Send" variant="brand" disabled="{!v.sendDisabled}" 
+                                            iconName="utility:send" iconPosition="right" 
+                                            onclick="{!c.SendFile}"/>
+                    </lightning:buttonGroup>
+                </lightning:layoutitem>
+            </lightning:layout>
+        </aura:set>
+    </lightning:card>
+</aura:component>	

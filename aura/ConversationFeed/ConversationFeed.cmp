@@ -1,0 +1,47 @@
+<!--
+ - Created by pmcclellan on 12/14/17.
+ - Received recordId so it "knows" what kind of page its on,
+ - retrieves all conversations with OwnerId and related to recordId, ORDER BY LastModifiedDate DESC.
+ - When it receives SMSreceived app event, it refreshes the conversation pull, but might not update
+ - if the new message isn't in a conversation related to this recordId.
+ -->
+
+<aura:component description="ConversationFeed"
+                implements="force:hasRecordId"
+                controller="GetConversationList">
+
+
+    <!-- declare attributes:  doInit retrieves Conversations -->
+
+    <aura:attribute name="ApexPull" type="Conversation__c[]"/>
+    <aura:attribute name="NewPull" type="Conversation__c[]"/>
+    <aura:attribute name="Conversations" type="Conversation__c[]"/>
+    <aura:attribute name="Loaded" type="Boolean" default="false"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="TheirColor" type="String" />
+    <aura:attribute name="StandAlone" type="Boolean"/>
+    <lightning:utilityBarAPI aura:id="utilitybar" />
+
+    <aura:handler name="change" value="{!v.recordId}" action="{!c.doInit}"/>
+    <aura:handler event="c:SMSreceived" action="{!c.doInit}"/>
+    <aura:handler name="ConversationEdited" event="c:ConversationEdited" action="{!c.onConversationEdited}"/>
+    <!-- public method "refresh" called by ProtonText.cmp when the feed tab has been reselected -->
+    <aura:method name="refresh" action="{!c.doInit}" access="public"/>
+
+
+    <!-- retrieves Messages and LastMessageId from Controller/APEX class -->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>    
+    <aura:handler name="SearchKeyConv" event="c:SearchKeyConv" action="{!c.onSearchKeyConv}"/>
+
+    <!-- layout -->
+    <c:SearchBarConversations />
+    
+    <ui:scrollerWrapper aura:Id="scroller" class="{!v.StandAlone ? 'scroller-standalone' : 'scroller'}">
+        <aura:if isTrue="{!v.Conversations}">
+            <aura:iteration items="{!v.Conversations}" var="Conversation">
+                <c:ConversationTile aura:id="ConversationTile" Conversation="{!Conversation}" TheirColor="{!v.TheirColor}"/>
+            </aura:iteration>
+        </aura:if>
+    </ui:scrollerWrapper>
+
+</aura:component>

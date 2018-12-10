@@ -1,0 +1,44 @@
+/**
+ * Created by pmcclellan on 12/13/17.
+ */
+.THIS.tile-body{
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.THIS .edit-recipient{
+    position: relative;
+    float: right;
+    margin-top: -36px;
+    margin-right: 36px;
+}
+
+.THIS .edit-button{
+    position: relative;
+    float: right;
+    margin-top: -36px;
+    margin-right: 10px;
+}
+ .THIS .time-stamp{
+     font-size: x-small;
+     position: relative;
+     width: calc(100% - 40px);
+     margin-bottom: -20px;
+     text-align: right;
+     display: block;
+     }
+
+.THIS .last-message{
+   margin-left: 55px;
+   margin-top: -20px;
+   text-align: left;
+   font: bold;
+   width: 75%;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   }

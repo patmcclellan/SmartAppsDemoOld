@@ -1,0 +1,13 @@
+<!--
+ - Created by pmcclellan on 2/19/18.
+ -->
+
+<design:component label="Proton Text">
+    <design:attribute name="ShowHeader" label="Show Application Icon and Name" default="false"/>
+    <design:attribute name="BroadcastEnabled" label="Enable Broadcast Texts" default="false" description="Broadcast texts are billed per recipient."/>
+    <design:attribute name="MmsOutEnabled" label="Enable Outbound MMS" default="true" description="Outbound MMS (images and file links) are billed as two SMS messages."/>
+    <design:attribute name="OurColor" label="Display Color of Outbound Messages" dataSource="Blue,Yellow,Rose,Green,Orange,Indigo,White" placeholder="Select" />
+    <design:attribute name="TheirColor" label="Display Color of Inbound Messages" dataSource="Yellow,Blue,Rose,Green,Orange,Indigo,White" placeholder="Select" />
+    <design:attribute name="Link1" label="Link to Object 1" datasource="apex://LinkedObjectList" placeholder="None" />
+    <design:attribute name="Link2" label="Link to Object 2" datasource="apex://LinkedObjectList" placeholder="None" />
+</design:component>

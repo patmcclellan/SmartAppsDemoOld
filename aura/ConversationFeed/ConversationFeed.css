@@ -1,0 +1,16 @@
+/**
+ * Created by pmcclellan on 12/18/17.
+ */
+.THIS.scroller {
+    max-height: 332px;
+    margin-top: -4px;
+    overscroll-behavior: contain;
+
+}
+
+.THIS.scroller-standalone {
+    height: 332px;
+    margin-top: -4px;
+    overscroll-behavior: contain;
+
+}
