@@ -8,6 +8,7 @@ global class LinkedObjectList extends VisualEditor.DynamicPickList{
 
     global override VisualEditor.DynamicPickListRows getValues() 
     {
+        // First set up the standard objects in the list
         VisualEditor.DynamicPickListRows  myValues = new VisualEditor.DynamicPickListRows();
         myValues.addRow(new VisualEditor.DataRow('None', 'None'));
         myValues.addRow(new VisualEditor.DataRow('Asset', 'Asset'));
@@ -17,7 +18,8 @@ global class LinkedObjectList extends VisualEditor.DynamicPickList{
         myValues.addRow(new VisualEditor.DataRow('Opportunity', 'Opportunity'));
         myValues.addRow(new VisualEditor.DataRow('Order', 'Order'));
         myValues.addRow(new VisualEditor.DataRow('Product', 'Product'));
-        
+
+        // Now get the Custom Objects and add to list
         Map<String, Schema.SObjectType> gd = Schema.getGlobalDescribe(); 
         Set<String> keys = gd.keyset();
         List<String> keyList = new List<String>(keys);
