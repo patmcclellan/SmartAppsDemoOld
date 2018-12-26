@@ -8,31 +8,42 @@ global class LinkedObjectList extends VisualEditor.DynamicPickList{
 
     global override VisualEditor.DynamicPickListRows getValues() 
     {
-        // First set up the standard objects in the list
-        VisualEditor.DynamicPickListRows  myValues = new VisualEditor.DynamicPickListRows();
-        myValues.addRow(new VisualEditor.DataRow('None', 'None'));
-        myValues.addRow(new VisualEditor.DataRow('Asset', 'Asset'));
-        myValues.addRow(new VisualEditor.DataRow('Campaign', 'Campaign'));
-        myValues.addRow(new VisualEditor.DataRow('Case', 'Case' ));
-        myValues.addRow(new VisualEditor.DataRow('Contract', 'Contract'));
-        myValues.addRow(new VisualEditor.DataRow('Opportunity', 'Opportunity'));
-        myValues.addRow(new VisualEditor.DataRow('Order', 'Order'));
-        myValues.addRow(new VisualEditor.DataRow('Product', 'Product'));
-
-        // Now get the Custom Objects and add to list
-        Map<String, Schema.SObjectType> gd = Schema.getGlobalDescribe(); 
+        Map<String, Schema.SObjectType> gd = Schema.getGlobalDescribe();
         Set<String> keys = gd.keyset();
-        List<String> keyList = new List<String>(keys);
-        keyList.sort();
+        List<String> keyList = new List<String>(keys); // apiNames
+        keyList.sort(); // this will give us an alphabetized list in our pulldown menu
+        
+        // also create the list of linked standard objects in alpha order
+        List<String> standardObjectList = new List<String>
+            {'asset', 'campaign', 'case', 'contract', 'opportunity', 'order', 'product2'};
+        List<String> apiNames = new List<String>();
+
+        //build the apiNames list with standard objects first
+        for (String thisObj : standardObjectList)
+        {
+            if (keyList.contains(thisObj)) apiNames.add(thisObj);
+        }
+
+        //then add the custom object apiNames to the apiNames list
         for(String key : keyList)
         {
-            if((key.contains('__c')))
-            {
-                String label = String.valueOf(gd.get(key)).replace('__c','');
-                VisualEditor.DataRow thisObj = new VisualEditor.DataRow(label,label);
-                myValues.addRow(thisObj);
-            } 
+            if(key.contains('__c')) apiNames.add(key); 
+        }
+
+        // now build the DynamicPickListRows, pulling the Label  
+        // for all the objects in the apiNames list, and starting
+        // the list with None
+
+        VisualEditor.DynamicPickListRows  myValues = new VisualEditor.DynamicPickListRows();
+        myValues.addRow(new VisualEditor.DataRow('None', 'None'));
+
+        List<Schema.DescribeSObjectResult> descResult = Schema.describeSObjects(apiNames);
+        for(DescribeSObjectResult result : descResult)
+        {
+            String label = result.getLabel();
+            myValues.addRow(new VisualEditor.DataRow(label,label));
         }
         return myValues;
     }
+    
 }
