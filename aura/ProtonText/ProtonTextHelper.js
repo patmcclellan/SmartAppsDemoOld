@@ -88,7 +88,7 @@
             case GroupName :
                 //console.log('🥓 GroupName (no __c): ' + GroupName);
                 $A.createComponent("c:ConvoDisplay", {
-                    "recordId":component.get("v.recordId"),
+                    "recordId": component.get("v.recordId"),
                     "Conversation": Conversation,
                     "TheirColor": TheirColor,
                     "OurColor": OurColor,

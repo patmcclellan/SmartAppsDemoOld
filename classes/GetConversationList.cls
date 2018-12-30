@@ -14,7 +14,7 @@ public with sharing class GetConversationList
         if(!Conversation__c.SObjectType.getDescribe().isAccessible()) {
             return null;
         } else 
-        {
+        { // check recordId to see if it's a Contact, Lead, Account, or Conversation__c
             Id OwnerId = UserInfo.getUserId();
             List<Conversation__c> Conversations = new List<Conversation__c>();
             if (recordId == null) 
@@ -33,8 +33,7 @@ public with sharing class GetConversationList
             {
                 Conversations = getConsConvId(recordId);
             }else
-            {
-                //get the name and type of the sObject represented by the recordId
+            {   // get the name and type of the sObject represented by the recordId
                 Schema.SObjectType sObjType = Id.valueOf(recordId).getSObjectType();
                 List<String> standardObjectList = new List<String>{'Asset', 'Campaign', 'Case', 'Contract', 'Opportunity', 'Order', 'Product2'};
                 String sObjName = sObjType.getDescribe().getName();
@@ -47,7 +46,7 @@ public with sharing class GetConversationList
                     Conversations = getRelatedConversations(OwnerId, recordId);
                 }
             }
-            return wrapConversations(Conversations);
+            return Conversations;
         }
     }
 
@@ -105,7 +104,11 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getConsContactId(String OwnerId, String recordId)
     {
          //find all the member records for this contact
-        List<Member__c> Members = [SELECT Conversation__c FROM Member__c WHERE Contact__c = :recordId];
+        List<Member__c> Members = [
+            SELECT Conversation__c 
+            FROM Member__c 
+            WHERE Contact__c = :recordId];
+
         List<String> IdList = new List<String>();
         System.debug('IdList: ' + IdList);
         //build a list of conversationIds for all those conversations
@@ -125,7 +128,11 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getConsLeadId(String OwnerId, String recordId)
     {
          //find all the member records for this contact
-        List<Member__c> Members = [SELECT Conversation__c FROM Member__c WHERE Lead__c = :recordId];
+        List<Member__c> Members = [
+            SELECT Conversation__c 
+            FROM Member__c 
+            WHERE Lead__c = :recordId];
+            
         List<String> IdList = new List<String>();
         System.debug('IdList: ' + IdList);
         //build a list of conversationIds for all those conversations
@@ -145,7 +152,10 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getConsAccountId(String OwnerId, String recordId)
     {
          //find all the contacts associated with this account
-        List<Contact> Contacts = [SELECT Id FROM Contact WHERE AccountId = :recordId];
+        List<Contact> Contacts = [
+            SELECT Id 
+            FROM Contact 
+            WHERE AccountId = :recordId];
 
         //find all the member records for all contacts in this list
         List<Member__c> Members = [SELECT Conversation__c FROM Member__c WHERE Contact__c IN :Contacts];

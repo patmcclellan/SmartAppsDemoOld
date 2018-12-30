@@ -4,38 +4,36 @@
 ({
     initConversations : function(component, event, helper)
     {
-    //   console.log("initConversations");
-      var getConversationList = component.get("c.getConversationList");
-      getConversationList.setParam("recordId", component.get("v.recordId"));
+        // call GetConversationList.cls and supply the recordId
+        var getConversationList = component.get("c.getConversationList");
+        getConversationList.setParam("recordId", component.get("v.recordId"));
 
-      //add callback behavior
-      getConversationList.setCallback(this, function(response)
-      {
-         var state = response.getState();
-         if (component.isValid() && state === "SUCCESS")
-         {
-             // if there are any Conversations, set v.Conversations
-             var Conversations = response.getReturnValue();
-            //  console.log("🥕Conversation 1: " + JSON.stringify(Conversations[0]));
-             if(Conversations.length > 0)
-             {
-                if (!component.get("v.Loaded")) // first time load
+        //add callback behavior
+        getConversationList.setCallback(this, function(response)
+        {
+            var state = response.getState();
+            if (component.isValid() && state === "SUCCESS")
+            {
+                // if there are any Conversations, set v.Conversations
+                var Conversations = response.getReturnValue();
+                if(Conversations.length > 0)
                 {
-                 component.set("v.Conversations", Conversations);
-                 component.set("v.Loaded", true);
-                 component.set("v.ApexPull", Conversations);
-                } else // refresh
-                {
-                    // console.log("APEX refreshed " + Conversations.length + " conversations at " + new Date() + ", checking for change...")
-                    component.set("v.NewPull", Conversations);
-                    helper.checkForChange(component, event, helper);
+                    if (!component.get("v.Loaded")) // first time load
+                    {
+                        component.set("v.Conversations", Conversations);
+                        component.set("v.Loaded", true);
+                        component.set("v.ApexPull", Conversations);
+                    } else // refresh
+                    {
+                        component.set("v.NewPull", Conversations);
+                        helper.checkForChange(component, event, helper);
+                    }
                 }
-             }
-         } //end of SUCCESS state code
-         else
-            console.log("ConversationFeedHelper:getConversationList failed with state: " + state);
-      }); //end of setCallback
-      $A.enqueueAction(getConversationList);
+            } //end of SUCCESS state code
+            else
+                console.error("ConversationFeedHelper:getConversationList failed with state: " + state);
+        }); //end of setCallback
+        $A.enqueueAction(getConversationList);
     },
 
     findConversations : function(component, event, helper)
