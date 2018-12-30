@@ -1,4 +1,4 @@
-// This component retrieves up to 200 related files + up to 200 unrelated files in findFilesbyRecordId, 
+// This component retrieves up to 300 related files + up to 300 unrelated files in findFilesbyRecordId, 
 // but only the first 24 are rendered. A wait for the first batch is not unexpected, and
 // rendering time on subsequent batches of 12 is tiny, enhancing responsiveness.
 // The full list is saved in v.FullListFiles, and scrolling to the

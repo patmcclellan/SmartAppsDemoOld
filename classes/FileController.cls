@@ -128,7 +128,7 @@ public with sharing class FileController
             if(Files[i].FirstPublishLocationId == recordId)
             {
                 sortedFiles.add(Files.remove(i));
-                
+
                 // adjust index for the removed item 
                 // so it doesn't skip checking the next item
                 i = i - 1; 
