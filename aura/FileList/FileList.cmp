@@ -1,0 +1,44 @@
+<aura:component  controller="FileController">
+
+    <aura:attribute name="Files" type="Object[]"/>
+    <aura:attribute name="FullListFiles" type="Object[]"/>
+    <aura:attribute name="searching" type="Boolean" default="false"/>
+    <aura:attribute name="hasFile" type="Boolean" default="true"/>
+    <aura:attribute name="viewImages" type="Boolean" default="true"/>
+    <aura:attribute name="searchKey" type="String"/>
+    <aura:attribute name="selectedFileId" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="SearchKeyFile" event="c:SearchKeyFile" action="{!c.onSearchKeyFile}"/>
+    <aura:handler name="SelectFile" event="c:SelectFile" action="{!c.onSelectFile}"/>
+    <aura:handler event="c:FileUploaded" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.viewImages}" action="{!c.refresh}"/>
+    <aura:handler name="change" value="{!v.searchKey}" action="{!c.onSearchKeyFile}"/>
+
+    <div class="searchbar">
+        <c:SearchBarFiles searchKey="{!v.searchKey}"/>
+    </div>  
+    <div class="spin-position" style="position:relative">
+        <lightning:spinner aura:id="spinner" alternativeText="Loading" size="medium" variant="brand"  />
+    </div>
+    <div aura:id="scroll_container" class="scrollerSize"> 
+        
+        <aura:if isTrue="{!v.hasFile}">
+            <lightning:layout multipleRows="true" >
+                <aura:iteration items="{!v.Files}" var="file">
+                    <c:FileTile File="{!file}" selected="{!v.selectedFileId == file.Id ? true : false}" />
+                </aura:iteration>
+            </lightning:layout>
+            <aura:set attribute="else">
+                <div class="no-files">
+                    <p>No files found.</p>
+                </div>
+            </aura:set>
+        </aura:if>
+    </div>
+    
+   
+
+
+</aura:component>

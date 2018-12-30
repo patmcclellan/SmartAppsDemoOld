@@ -1,0 +1,25 @@
+.THIS .no-files{
+    text-align: center;
+    font-style: italic;
+    padding-top: 20px;
+}
+.THIS.spin-position {
+}
+
+.THIS.scrollerSize {
+    border-top: solid 1px lightgray;
+    overflow:scroll;
+    width: 100%;
+    padding-top: 20px;
+    margin-bottom: -8px;
+    height: 440px;
+    overscroll-behavior: contain;
+}
+
+.THIS.searchbar {
+    width: 260px;
+    float:right;
+    margin-top: -12px;
+    margin-right: 16px;
+    padding-bottom: 8px;
+}

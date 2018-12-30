@@ -14,12 +14,14 @@ public with sharing class GetConversationList
         if(!Conversation__c.SObjectType.getDescribe().isAccessible()) {
             return null;
         } else 
-        { // check recordId to see if it's a Contact, Lead, Account, or Conversation__c
+        { 
             Id OwnerId = UserInfo.getUserId();
             List<Conversation__c> Conversations = new List<Conversation__c>();
             if (recordId == null) 
             {
                 Conversations = getConsNoRecordId(OwnerId);
+            
+            // check recordId to see if it's a Contact, Lead, Account, or Conversation__c
             }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) // it's a contact record
             {
                 Conversations = getConsContactId(OwnerId, recordId);
@@ -100,7 +102,7 @@ public with sharing class GetConversationList
                 ];
     }
 
-    // this method finds conversations related to a ContactId
+    // this method finds Conversations related to a ContactId
     private static List<Conversation__c> getConsContactId(String OwnerId, String recordId)
     {
          //find all the member records for this contact
@@ -124,7 +126,7 @@ public with sharing class GetConversationList
                 ];
     }
 
-    // this method finds conversations related to a LeadId
+    // this method finds Conversations related to a LeadId
     private static List<Conversation__c> getConsLeadId(String OwnerId, String recordId)
     {
          //find all the member records for this contact
@@ -132,7 +134,7 @@ public with sharing class GetConversationList
             SELECT Conversation__c 
             FROM Member__c 
             WHERE Lead__c = :recordId];
-            
+
         List<String> IdList = new List<String>();
         System.debug('IdList: ' + IdList);
         //build a list of conversationIds for all those conversations
@@ -148,7 +150,7 @@ public with sharing class GetConversationList
                 ];
     }
 
-    // this method finds conversations related to an AccountId
+    // this method finds Conversations related to an AccountId
     private static List<Conversation__c> getConsAccountId(String OwnerId, String recordId)
     {
          //find all the contacts associated with this account
@@ -177,7 +179,7 @@ public with sharing class GetConversationList
 
     }
 
-    // this method finds conversations related to a ConversationId
+    // this method finds Conversations related to a ConversationId
     // NOTE: it does not check for OwnerId -- so anyone who has access
     // to this Conversation record can read the Conversation
     private static List<Conversation__c> getConsConvId(String recordId)
@@ -189,7 +191,7 @@ public with sharing class GetConversationList
                 ];
     }
 
-    // this method finds conversations based on a Search key
+    // this method finds Conversations based on a Search key
     private static List<Conversation__c> getConsLikeName(String OwnerId, String name)
     {
         return  [
