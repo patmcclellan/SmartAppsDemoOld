@@ -3,7 +3,9 @@
  -->
 
 
-<aura:component description="SMS Texting Component from Proton 7 Group." implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+<aura:component description="SMS Texting Component from Proton 7 Group." 
+                implements="flexipage:availableForAllPageTypes, force:hasRecordId" 
+                access="global">
 
 
     <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
@@ -60,25 +62,25 @@
                             selectedTabId="{!v.selectedTab }"
                             class="tabs" >
         <aura:if isTrue="{!v.UpdateConversationFlag}">
-                <lightning:tab  id="feed"
-                                label="Conversations 🔴"
-                                class="slds-size_5-of-12">
-                <div class="slds-p-bottom_large">
-                    <c:ConversationFeed aura:id="ConversationFeed" recordId="{!v.recordId}" TheirColor="{#v.TheirColor}" StandAlone="{#v.ShowHeader}"/>
+            <lightning:tab  id="feed"
+                            label="Conversations 🔴"
+                            class="slds-size_5-of-12">
+            <div class="slds-p-bottom_large">
+                <c:ConversationFeed aura:id="ConversationFeed" recordId="{!v.recordId}" TheirColor="{#v.TheirColor}" StandAlone="{#v.ShowHeader}"/>
+            </div>
+            <aura:if isTrue="{!v.BroadcastEnabled}">
+                <div class="group-button">
+                    <lightning:buttonIcon   iconName="utility:groups"
+                                            size="large"
+                                            onclick="{! c.onNewBroadcast }" 
+                                            alternativeText="Create Group" />
                 </div>
-                <aura:if isTrue="{!v.BroadcastEnabled}">
-                    <div class="group-button">
-                        <lightning:buttonIcon   iconName="utility:groups"
-                                                size="large"
-                                                onclick="{! c.onNewBroadcast }" 
-                                                alternativeText="Create Group" />
-                    </div>
-                </aura:if>
-                <div class="new-button">
-                    <lightning:button   name="New Conversation"
-                                        label="New Conversation"
-                                        onclick="{!c.onNewConversation}"/>
-                </div>
+            </aura:if>
+            <div class="new-button">
+                <lightning:button   name="New Conversation"
+                                    label="New Conversation"
+                                    onclick="{!c.onNewConversation}"/>
+            </div>
             </lightning:tab>
 
         <aura:set attribute="else">
