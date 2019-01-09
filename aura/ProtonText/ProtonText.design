@@ -3,6 +3,8 @@
  -->
 
 <design:component label="Proton Text">
+
+    <!-- Boolean options for layout and feature enablement -->
     <design:attribute   name="ShowHeader" 
                         label="Show Application Icon and Name" 
                         default="false"/>
@@ -14,6 +16,8 @@
                         label="Enable Outbound MMS" 
                         default="true" 
                         description="Outbound MMS (images and file links) are billed as two SMS messages."/>
+    
+    <!-- Static Picklists for Inbound and Outbound colors -->
     <design:attribute   name="OurColor" 
                         label="Display Color of Outbound Messages" 
                         dataSource="Blue,Yellow,Rose,Green,Orange,Indigo,White" 
@@ -22,6 +26,8 @@
                         label="Display Color of Inbound Messages" 
                         dataSource="Yellow,Blue,Rose,Green,Orange,Indigo,White" 
                         placeholder="Select" />
+    
+    <!-- Dynamic Picklists for list of Standard and Custom objects -->
     <design:attribute   name="Link1" 
                         label="Link to Object 1" 
                         datasource="apex://LinkedObjectList" 
@@ -32,4 +38,5 @@
                         datasource="apex://LinkedObjectList" 
                         placeholder="None" 
                         description="Lead, Contact, and Account are not in this list because they are implicitly linked when you select a recipient."/>
+
 </design:component>

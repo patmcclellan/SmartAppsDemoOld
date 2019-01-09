@@ -21,7 +21,7 @@ public with sharing class GetConversationList
             {
                 Conversations = getConsNoRecordId(OwnerId);
             
-            // check recordId to see if it's a Contact, Lead, Account, or Conversation__c
+            // check recordId to see if it's a Contact, Lead, Account
             }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) // it's a contact record
             {
                 Conversations = getConsContactId(OwnerId, recordId);
@@ -31,10 +31,7 @@ public with sharing class GetConversationList
             } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix()) // it's an Account record
             {
                 Conversations = getConsAccountId(OwnerId, recordId);
-            } else if (recordId.left(3) == Schema.SObjectType.Conversation__c.getKeyPrefix()) // it's a Conversation record
-            {
-                Conversations = getConsConvId(recordId);
-            }else
+            } else
             {   // get the name and type of the sObject represented by the recordId
                 Schema.SObjectType sObjType = Id.valueOf(recordId).getSObjectType();
                 List<String> standardObjectList = new List<String>{'Asset', 'Campaign', 'Case', 'Contract', 'Opportunity', 'Order', 'Product2'};
@@ -177,18 +174,6 @@ public with sharing class GetConversationList
                     ORDER BY LastMessageDate__c DESC
                 ];
 
-    }
-
-    // this method finds Conversations related to a ConversationId
-    // NOTE: it does not check for OwnerId -- so anyone who has access
-    // to this Conversation record can read the Conversation
-    private static List<Conversation__c> getConsConvId(String recordId)
-    {
-        return [
-                    SELECT  //[long list of fields]
-                    FROM Conversation__c
-                    WHERE Id = :recordId
-                ];
     }
 
     // this method finds Conversations based on a Search key

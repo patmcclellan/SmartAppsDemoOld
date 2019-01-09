@@ -7,18 +7,19 @@
                 implements="flexipage:availableForAllPageTypes, force:hasRecordId" 
                 access="global">
 
-
-    <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
-    <aura:attribute name="selectedTab" type="String" default="feed"/>
-    <aura:attribute name="activeConversationId" type="Id"/>
-    <aura:attribute name="ShowConnectionIndicator" type="Boolean"/>
+    <!-- Attributes specified in .design file NOTE: access=global -->
     <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
     <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
     <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
     <aura:attribute name="OurColor" type="String" access="global" />
     <aura:attribute name="TheirColor" type="String" access="global"/>
-    <aura:attribute name="Link1" type="String" access="global" default="None"/>
-    <aura:attribute name="Link2" type="String" access="global" default="None"/>
+    <aura:attribute name="Link1" type="String" default="None"access="global" />
+    <aura:attribute name="Link2" type="String" default="None"access="global" />
+
+    <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
+    <aura:attribute name="selectedTab" type="String" default="feed"/>
+    <aura:attribute name="activeConversationId" type="Id"/>
+    <aura:attribute name="ShowConnectionIndicator" type="Boolean"/>
 
     <!-- set a switch for showing the create New Conversation/Broadcast interface -->
     <aura:attribute name="NewConversation" type="Boolean" default="false"/>
@@ -56,7 +57,8 @@
         <aura:if isTrue="{!v.CancelX}">
             <a class="cancel" onclick="{!c.onClickCancel}">×</a>
         </aura:if>
- <!-- Conversation Feed -->
+    
+        <!-- Conversation Feed -->
         <lightning:tabset   aura:id="tabs" 
                             variant="default"
                             selectedTabId="{!v.selectedTab }"
@@ -66,12 +68,15 @@
                             label="Conversations 🔴"
                             class="slds-size_5-of-12">
             <div class="slds-p-bottom_large">
+
+        <!-- TheirColor and recordId are passed to ConversationFeed.cmp    -->
                 <c:ConversationFeed 
                         aura:id="ConversationFeed" 
                         recordId="{!v.recordId}" 
                         TheirColor="{#v.TheirColor}" 
                         StandAlone="{#v.ShowHeader}"/>
             </div>
+
             <aura:if isTrue="{!v.BroadcastEnabled}">
                 <div class="group-button">
                     <lightning:buttonIcon   iconName="utility:groups"
