@@ -1,0 +1,8 @@
+.THIS .file {
+    padding: 6px !important;
+}
+
+.THIS .selected {
+    box-shadow: inset 0px 0px 0px 5px darkorange;
+    box-sizing: border-box;
+}

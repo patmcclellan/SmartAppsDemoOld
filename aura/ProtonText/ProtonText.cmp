@@ -4,7 +4,7 @@
 
 
 <aura:component description="SMS Texting Component from Proton 7 Group." 
-                implements="flexipage:availableForAllPageTypes, force:hasRecordId" 
+                implements="force:hasRecordId, flexipage:availableForAllPageTypes" 
                 access="global">
 
     <!-- Attributes specified in .design file NOTE: access=global -->

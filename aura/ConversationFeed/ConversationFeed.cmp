@@ -17,7 +17,6 @@
     <aura:attribute name="NewPull" type="Conversation__c[]"/>
     <aura:attribute name="Conversations" type="Conversation__c[]"/>
     <aura:attribute name="Loaded" type="Boolean" default="false"/>
-    <aura:attribute name="recordId" type="String" />
     <aura:attribute name="TheirColor" type="String" />
     <aura:attribute name="StandAlone" type="Boolean"/>
     <lightning:utilityBarAPI aura:id="utilitybar" />

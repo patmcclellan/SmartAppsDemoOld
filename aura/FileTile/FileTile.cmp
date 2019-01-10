@@ -1,0 +1,13 @@
+<aura:component>
+
+    <aura:attribute name="File" type="Object"/>
+    <aura:attribute name="selected" type="boolean" default="false"/>
+
+    <aura:registerEvent type="c:SelectFile" name="SelectFile"/>
+
+    <span onclick="{!c.selectFile}" >
+        <div class="{! v.selected ? 'file selected' : 'file' }">
+            <lightning:fileCard fileId="{!v.File.ContentDocumentId}" description="{!v.File.PathOnClient}" />
+        </div>
+    </span>
+</aura:component>	
