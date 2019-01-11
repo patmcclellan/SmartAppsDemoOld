@@ -15,22 +15,21 @@ public with sharing class GetConversationList
             return null;
         } else 
         { 
-            Id UserId = UserInfo.getUserId();
             List<Conversation__c> Conversations = new List<Conversation__c>();
             if (recordId == null) 
             {
-                Conversations = getConsNoRecordId(UserId);
+                Conversations = getConsNoRecordId();
             
             // check recordId to see if it's a Contact, Lead, Account
             }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) // it's a contact record
             {
-                Conversations = getConsContactId(UserId, recordId);
+                Conversations = getConsContactId(recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Lead.getKeyPrefix()) // it's a lead record
             {
-                Conversations = getConsLeadId(UserId, recordId);
+                Conversations = getConsLeadId(recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix()) // it's an Account record
             {
-                Conversations = getConsAccountId(UserId, recordId);
+                Conversations = getConsAccountId(recordId);
             } else
             {   // get the name and type of the sObject represented by the recordId
                 Schema.SObjectType sObjType = Id.valueOf(recordId).getSObjectType();
@@ -39,10 +38,10 @@ public with sharing class GetConversationList
                 if (standardObjectList.contains(sObjName)) // standard object
                 {
                     String lookupFieldName = sObjName + '__c';
-                    Conversations = getRelatedConversations(UserId, recordId, lookupFieldName);
+                    Conversations = getRelatedConversations(recordId, lookupFieldName);
                 }else //custom object
                 {
-                    Conversations = getRelatedConversations(UserId, recordId);
+                    Conversations = getRelatedConversations(recordId);
                 }
             }
             return Conversations;
@@ -58,15 +57,16 @@ public with sharing class GetConversationList
             Id UserId = UserInfo.getUserId();
             String name = '%' + searchKey + '%';
             List<Conversation__c> Conversations = new List<Conversation__c>();
-            Conversations = getConsLikeName(UserId, name);
+            Conversations = getConsLikeName(name);
             return Conversations;
         }
     }
 //---------------- UTILITY METHODS -------------------------------------------------------------
   
     //this method is used to search for conversations related to standard records
-    private static List<Conversation__c> getRelatedConversations(String UserId, String recordId, String lookupFieldName)
+    private static List<Conversation__c> getRelatedConversations(String recordId, String lookupFieldName)
     {
+        Id UserId = UserInfo.getUserId();
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c ' +
@@ -77,8 +77,9 @@ public with sharing class GetConversationList
     }
 
     //this method is used to search for conversations related to custom records
-    private static List<Conversation__c> getRelatedConversations(String UserId, String recordId)
+    private static List<Conversation__c> getRelatedConversations(String recordId)
     {
+        Id UserId = UserInfo.getUserId();
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c '+
@@ -89,8 +90,9 @@ public with sharing class GetConversationList
     }
 
     //this method is used to search for conversations when we don't have a recordId
-    private static List<Conversation__c> getConsNoRecordId(String UserId)
+    private static List<Conversation__c> getConsNoRecordId()
     {
+        Id UserId = UserInfo.getUserId();
         return [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
@@ -100,9 +102,11 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations related to a ContactId
-    private static List<Conversation__c> getConsContactId(String UserId, String recordId)
+    private static List<Conversation__c> getConsContactId(String recordId)
     {
-         //find all the member records for this contact
+        Id UserId = UserInfo.getUserId();
+
+        //find all the member records for this contact
         List<Member__c> Members = [
             SELECT Conversation__c 
             FROM Member__c 
@@ -124,9 +128,11 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations related to a LeadId
-    private static List<Conversation__c> getConsLeadId(String UserId, String recordId)
+    private static List<Conversation__c> getConsLeadId(String recordId)
     {
-         //find all the member records for this contact
+        Id UserId = UserInfo.getUserId();
+
+        //find all the member records for this contact
         List<Member__c> Members = [
             SELECT Conversation__c 
             FROM Member__c 
@@ -148,9 +154,11 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations related to an AccountId
-    private static List<Conversation__c> getConsAccountId(String UserId, String recordId)
+    private static List<Conversation__c> getConsAccountId(String recordId)
     {
-         //find all the contacts associated with this account
+        Id UserId = UserInfo.getUserId();
+
+        //find all the contacts associated with this account
         List<Contact> Contacts = [
             SELECT Id 
             FROM Contact 
@@ -177,8 +185,9 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations based on a Search key
-    private static List<Conversation__c> getConsLikeName(String UserId, String name)
+    private static List<Conversation__c> getConsLikeName(String name)
     {
+        Id UserId = UserInfo.getUserId();
         return  [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
