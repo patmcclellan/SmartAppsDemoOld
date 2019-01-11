@@ -15,22 +15,22 @@ public with sharing class GetConversationList
             return null;
         } else 
         { 
-            Id OwnerId = UserInfo.getUserId();
+            Id UserId = UserInfo.getUserId();
             List<Conversation__c> Conversations = new List<Conversation__c>();
             if (recordId == null) 
             {
-                Conversations = getConsNoRecordId(OwnerId);
+                Conversations = getConsNoRecordId(UserId);
             
             // check recordId to see if it's a Contact, Lead, Account
             }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) // it's a contact record
             {
-                Conversations = getConsContactId(OwnerId, recordId);
+                Conversations = getConsContactId(UserId, recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Lead.getKeyPrefix()) // it's a lead record
             {
-                Conversations = getConsLeadId(OwnerId, recordId);
+                Conversations = getConsLeadId(UserId, recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix()) // it's an Account record
             {
-                Conversations = getConsAccountId(OwnerId, recordId);
+                Conversations = getConsAccountId(UserId, recordId);
             } else
             {   // get the name and type of the sObject represented by the recordId
                 Schema.SObjectType sObjType = Id.valueOf(recordId).getSObjectType();
@@ -39,10 +39,10 @@ public with sharing class GetConversationList
                 if (standardObjectList.contains(sObjName)) // standard object
                 {
                     String lookupFieldName = sObjName + '__c';
-                    Conversations = getRelatedConversations(OwnerId, recordId, lookupFieldName);
+                    Conversations = getRelatedConversations(UserId, recordId, lookupFieldName);
                 }else //custom object
                 {
-                    Conversations = getRelatedConversations(OwnerId, recordId);
+                    Conversations = getRelatedConversations(UserId, recordId);
                 }
             }
             return Conversations;
@@ -55,52 +55,52 @@ public with sharing class GetConversationList
         if(!Conversation__c.SObjectType.getDescribe().isAccessible()) {
             return null;
         } else {
-            Id OwnerId = UserInfo.getUserId();
+            Id UserId = UserInfo.getUserId();
             String name = '%' + searchKey + '%';
             List<Conversation__c> Conversations = new List<Conversation__c>();
-            Conversations = getConsLikeName(OwnerId, name);
+            Conversations = getConsLikeName(UserId, name);
             return Conversations;
         }
     }
 //---------------- UTILITY METHODS -------------------------------------------------------------
   
     //this method is used to search for conversations related to standard records
-    private static List<Conversation__c> getRelatedConversations(String OwnerId, String recordId, String lookupFieldName)
+    private static List<Conversation__c> getRelatedConversations(String UserId, String recordId, String lookupFieldName)
     {
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c ' +
-            'WHERE OwnerId = \'' + OwnerId + '\' ' +
+            'WHERE OwnerId = \'' + UserId + '\' ' +
             'AND '+ lookupFieldName +' = \'' + recordId + '\' ' +
             'ORDER BY LastMessageDate__c DESC'
         );
     }
 
     //this method is used to search for conversations related to custom records
-    private static List<Conversation__c> getRelatedConversations(String OwnerId, String recordId)
+    private static List<Conversation__c> getRelatedConversations(String UserId, String recordId)
     {
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c '+
-            'WHERE OwnerId = \'' + OwnerId + '\' ' +
+            'WHERE OwnerId = \'' + UserId + '\' ' +
             'AND (Record1__c = \'' + recordId + '\'' + ' OR Record2__c = \'' + recordId + '\') ' +
             'ORDER BY LastMessageDate__c DESC'
         );
     }
 
     //this method is used to search for conversations when we don't have a recordId
-    private static List<Conversation__c> getConsNoRecordId(String OwnerId)
+    private static List<Conversation__c> getConsNoRecordId(String UserId)
     {
         return [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
-                    WHERE OwnerId = :OwnerId 
+                    WHERE OwnerId = :UserId 
                     ORDER BY LastMessageDate__c DESC
                 ];
     }
 
     // this method finds Conversations related to a ContactId
-    private static List<Conversation__c> getConsContactId(String OwnerId, String recordId)
+    private static List<Conversation__c> getConsContactId(String UserId, String recordId)
     {
          //find all the member records for this contact
         List<Member__c> Members = [
@@ -118,13 +118,13 @@ public with sharing class GetConversationList
         return [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
-                    WHERE OwnerId = :OwnerId AND Id IN :IdList
+                    WHERE OwnerId = :UserId AND Id IN :IdList
                     ORDER BY LastMessageDate__c DESC
                 ];
     }
 
     // this method finds Conversations related to a LeadId
-    private static List<Conversation__c> getConsLeadId(String OwnerId, String recordId)
+    private static List<Conversation__c> getConsLeadId(String UserId, String recordId)
     {
          //find all the member records for this contact
         List<Member__c> Members = [
@@ -142,13 +142,13 @@ public with sharing class GetConversationList
         return [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
-                    WHERE OwnerId = :OwnerId AND Id IN :IdList
+                    WHERE OwnerId = :UserId AND Id IN :IdList
                     ORDER BY LastMessageDate__c DESC
                 ];
     }
 
     // this method finds Conversations related to an AccountId
-    private static List<Conversation__c> getConsAccountId(String OwnerId, String recordId)
+    private static List<Conversation__c> getConsAccountId(String UserId, String recordId)
     {
          //find all the contacts associated with this account
         List<Contact> Contacts = [
@@ -170,19 +170,19 @@ public with sharing class GetConversationList
         return  [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
-                    WHERE OwnerId = :OwnerId AND Id IN :IdList
+                    WHERE OwnerId = :UserId AND Id IN :IdList
                     ORDER BY LastMessageDate__c DESC
                 ];
 
     }
 
     // this method finds Conversations based on a Search key
-    private static List<Conversation__c> getConsLikeName(String OwnerId, String name)
+    private static List<Conversation__c> getConsLikeName(String UserId, String name)
     {
         return  [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
-                    WHERE OwnerId = :OwnerId AND Group_Name__c LIKE :name
+                    WHERE OwnerId = :UserId AND Group_Name__c LIKE :name
                     ORDER BY LastMessageDate__c DESC
                 ];
     }

@@ -1,4 +1,4 @@
-<aura:component  controller="FileController">
+<aura:component  controller="FileController" implements="force:hasRecordId">
 
     <aura:attribute name="Files" type="Object[]"/>
     <aura:attribute name="FullListFiles" type="Object[]"/>

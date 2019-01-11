@@ -1,5 +1,6 @@
 <aura:component controller="FileController" >
 
+    <aura:attribute name="recordId" type="String" />
     <aura:attribute name="accept" type="List" 
                     default="['.jpeg', '.jpg', '.gif', '.png',
                     '.pdf', '.txt','.rtf', '.csv', '.zip',
@@ -13,7 +14,6 @@
     <aura:attribute name="disabled" type="Boolean" default="false"/>
     <aura:attribute name="viewImages" type="Boolean" default="true"/>
     <aura:attribute name="sendDisabled" type="Boolean" default="true"/>
-    <aura:attribute name="recordId" type="String" />
     <aura:attribute name="File" type="Object"/>
     <aura:attribute name="searchKey" type="String" default=""/>
 

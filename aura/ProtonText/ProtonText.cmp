@@ -7,7 +7,7 @@
                 implements="force:hasRecordId, flexipage:availableForAllPageTypes" 
                 access="global">
 
-    <!-- Attributes specified in .design file NOTE: access=global -->
+    <!-- Attributes specified in .design file NOTE: access="global" -->
     <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
     <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
     <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
