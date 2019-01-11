@@ -1,6 +1,7 @@
 /**
- * Created by pmcclellan on 12/14/17. Updated 7/3/18 to add Campaign, Contract, and custom objects.
- * Refactored 12/16/18.
+ * Created by pmcclellan on 12/14/17. 
+ * Updated 7/3/18 to add custom objects and additional standard objects.
+ * Refactored 01/11/19.
  * Apex Controller for ConversationFeed.cmp
  * Uses UserId and sharing, along with recordId to return Conversations owned by
  * this user, and related to the particular record page in view.
@@ -21,14 +22,14 @@ public with sharing class GetConversationList
                 Conversations = getConsNoRecordId();
             
             // check recordId to see if it's a Contact, Lead, Account
-            }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) // it's a contact record
-            {
+            }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) 
+            { // it's a contact record
                 Conversations = getConsContactId(recordId);
-            } else if (recordId.left(3) == Schema.SObjectType.Lead.getKeyPrefix()) // it's a lead record
-            {
+            } else if (recordId.left(3) == Schema.SObjectType.Lead.getKeyPrefix())
+            { // it's a lead record
                 Conversations = getConsLeadId(recordId);
-            } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix()) // it's an Account record
-            {
+            } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix())
+            { // it's an Account record
                 Conversations = getConsAccountId(recordId);
             } else
             {   // get the name and type of the sObject represented by the recordId
@@ -67,6 +68,7 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getRelatedConversations(String recordId, String lookupFieldName)
     {
         Id UserId = UserInfo.getUserId();
+
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c ' +
@@ -80,6 +82,7 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getRelatedConversations(String recordId)
     {
         Id UserId = UserInfo.getUserId();
+
         return Database.query(
             'SELECT  [long list of fields] ' +
             'FROM Conversation__c '+
@@ -93,6 +96,7 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getConsNoRecordId()
     {
         Id UserId = UserInfo.getUserId();
+
         return [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
@@ -188,6 +192,7 @@ public with sharing class GetConversationList
     private static List<Conversation__c> getConsLikeName(String name)
     {
         Id UserId = UserInfo.getUserId();
+
         return  [
                     SELECT  //[long list of fields]
                     FROM Conversation__c
