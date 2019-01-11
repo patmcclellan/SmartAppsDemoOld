@@ -10,7 +10,7 @@
 public with sharing class GetConversationList
 {
     @AuraEnabled
-    public static List<ConversationWrapper> getConversationList(String recordId)
+    public static List<Conversation__c> getConversationList(String recordId)
     {
         if(!Conversation__c.SObjectType.getDescribe().isAccessible()) {
             return null;
@@ -19,18 +19,18 @@ public with sharing class GetConversationList
             List<Conversation__c> Conversations = new List<Conversation__c>();
             if (recordId == null) 
             {
-                Conversations = getConsNoRecordId();
+                Conversations = getConversationsNoRecordId();
             
             // check recordId to see if it's a Contact, Lead, Account
             }else if (recordId.left(3) == Schema.SObjectType.Contact.getKeyPrefix()) 
             { // it's a contact record
-                Conversations = getConsContactId(recordId);
+                Conversations = getConversationsContactId(recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Lead.getKeyPrefix())
             { // it's a lead record
-                Conversations = getConsLeadId(recordId);
+                Conversations = getConversationsLeadId(recordId);
             } else if (recordId.left(3) == Schema.SObjectType.Account.getKeyPrefix())
             { // it's an Account record
-                Conversations = getConsAccountId(recordId);
+                Conversations = getConversationsAccountId(recordId);
             } else
             {   // get the name and type of the sObject represented by the recordId
                 Schema.SObjectType sObjType = Id.valueOf(recordId).getSObjectType();
@@ -50,20 +50,36 @@ public with sharing class GetConversationList
     }
 
     @AuraEnabled
-    public static List<ConversationWrapper> searchConversationList(String searchKey)
+    public static List<Conversation__c> searchConversationList(String searchKey)
     {
         if(!Conversation__c.SObjectType.getDescribe().isAccessible()) {
             return null;
-        } else {
+        } else 
+        {
             Id UserId = UserInfo.getUserId();
             String name = '%' + searchKey + '%';
             List<Conversation__c> Conversations = new List<Conversation__c>();
-            Conversations = getConsLikeName(name);
+            Conversations = getConversationsLikeName(name);
             return Conversations;
         }
     }
-//---------------- UTILITY METHODS -------------------------------------------------------------
-  
+//---------------- UTILITY METHODS --------------------------------------------
+//-----------------------------------------------------------------------------
+
+    //this method is used to search for conversations when we don't have a recordId
+    private static List<Conversation__c> getConversationsNoRecordId()
+    {
+        Id UserId = UserInfo.getUserId();
+
+        return [
+                    SELECT  //[long list of fields]
+                    FROM Conversation__c
+                    WHERE OwnerId = :UserId 
+                    ORDER BY LastMessageDate__c DESC
+                ];
+    }
+
+
     //this method is used to search for conversations related to standard records
     private static List<Conversation__c> getRelatedConversations(String recordId, String lookupFieldName)
     {
@@ -92,21 +108,8 @@ public with sharing class GetConversationList
         );
     }
 
-    //this method is used to search for conversations when we don't have a recordId
-    private static List<Conversation__c> getConsNoRecordId()
-    {
-        Id UserId = UserInfo.getUserId();
-
-        return [
-                    SELECT  //[long list of fields]
-                    FROM Conversation__c
-                    WHERE OwnerId = :UserId 
-                    ORDER BY LastMessageDate__c DESC
-                ];
-    }
-
     // this method finds Conversations related to a ContactId
-    private static List<Conversation__c> getConsContactId(String recordId)
+    private static List<Conversation__c> getConversationsContactId(String recordId)
     {
         Id UserId = UserInfo.getUserId();
 
@@ -132,7 +135,7 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations related to a LeadId
-    private static List<Conversation__c> getConsLeadId(String recordId)
+    private static List<Conversation__c> getConversationsLeadId(String recordId)
     {
         Id UserId = UserInfo.getUserId();
 
@@ -158,7 +161,7 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations related to an AccountId
-    private static List<Conversation__c> getConsAccountId(String recordId)
+    private static List<Conversation__c> getConversationsAccountId(String recordId)
     {
         Id UserId = UserInfo.getUserId();
 
@@ -189,7 +192,7 @@ public with sharing class GetConversationList
     }
 
     // this method finds Conversations based on a Search key
-    private static List<Conversation__c> getConsLikeName(String name)
+    private static List<Conversation__c> getConversationsLikeName(String name)
     {
         Id UserId = UserInfo.getUserId();
 
