@@ -70,7 +70,11 @@
                                     label="Conversations 🔴"
                                     class="slds-size_5-of-12">
                     <div class="slds-p-bottom_large">
-                        <c:ConversationFeed aura:id="ConversationFeed" recordId="{!v.recordId}" TheirColor="{#v.TheirColor}" StandAlone="{#v.ShowHeader}"/>
+                        <c:ConversationFeed aura:id="ConversationFeed" 
+                                            recordId="{!v.recordId}" 
+                                            OurColor="{#v.OurColor}"
+                                            TheirColor="{#v.TheirColor}" 
+                                            StandAlone="{#v.ShowHeader}"/>
                     </div>
                     <aura:if isTrue="{!v.BroadcastEnabled}">
                         <div class="group-button">
