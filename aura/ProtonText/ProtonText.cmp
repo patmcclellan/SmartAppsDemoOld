@@ -5,20 +5,22 @@
 
  <aura:component description="SMS Texting Component from Proton 7 Group." implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
 
+        <!-- declare all the global attributes that are configurable -->
+        <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
+        <aura:attribute name="SendFromEnabled" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="ConversationSharing" type="String" default="Private" access="global" />
+        <aura:attribute name="OurColor" type="String" access="global" />
+        <aura:attribute name="TheirColor" type="String" access="global"/>
+        <aura:attribute name="Link1" type="String" default="None" access="global"/>
+        <aura:attribute name="Link2" type="String" default="None" access="global"/>
+
 
         <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
         <aura:attribute name="selectedTab" type="String" default="feed"/>
         <aura:attribute name="activeConversationId" type="Id"/>
         <aura:attribute name="ShowConnectionIndicator" type="Boolean"/>
-        <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
-        <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
-        <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
-        <aura:attribute name="SendFromEnabled" type="Boolean" default="false" access="global"/>
-        <aura:attribute name="ConversationSharing" type="String" access="global" default="Private" />
-        <aura:attribute name="OurColor" type="String" access="global" />
-        <aura:attribute name="TheirColor" type="String" access="global"/>
-        <aura:attribute name="Link1" type="String" access="global" default="None"/>
-        <aura:attribute name="Link2" type="String" access="global" default="None"/>
     
         <!-- set a switch for showing the create New Conversation/Broadcast interface -->
         <aura:attribute name="NewBroadcast" type="Boolean" default="false"/>
