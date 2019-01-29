@@ -3,7 +3,8 @@
  -->
 
 
- <aura:component description="SMS Texting Component from Proton 7 Group." implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
+ <aura:component    description="SMS Texting Component from Proton 7 Group." 
+                    implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
 
         <!-- declare all the global attributes that are configurable -->
         <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>

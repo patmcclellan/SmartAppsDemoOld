@@ -19,4 +19,5 @@
                         description="Lead, Contact, and Account are not in this list because they are implicitly linked when you select a recipient." />
     <design:attribute   name="Link2" label="Link to Object 2" datasource="apex://LinkedObjectList" placeholder="None" 
                         description="Lead, Contact, and Account are not in this list because they are implicitly linked when you select a recipient."/>
+
 </design:component>

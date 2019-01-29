@@ -12,7 +12,8 @@ global class LinkedObjectList extends VisualEditor.DynamicPickList{
         Set<String> keys = gd.keyset();
         List<String> keyList = new List<String>(keys); // apiNames
         keyList.sort(); // this will assure an alphabetized list
-        List<String> standardObjectList = new List<String>{'asset', 'campaign', 'case', 'contract', 'opportunity', 'order', 'product2'};
+        List<String> standardObjectList = new List<String>
+            {'asset', 'campaign', 'case', 'contract', 'opportunity', 'order', 'product2'};
         List<String> apiNames = new List<String>();
 
         //build the apiNames list with standard objects first
@@ -27,7 +28,7 @@ global class LinkedObjectList extends VisualEditor.DynamicPickList{
         //then add the custom object apiNames to the apiNames list
         for(String key : keyList)
         {
-            if(key.contains('__c') && (key.indexOf('proton7')<0)) //exclude custom objects in this managed package
+            if(key.contains('__c')) 
             {
                 apiNames.add(key);
             } 
