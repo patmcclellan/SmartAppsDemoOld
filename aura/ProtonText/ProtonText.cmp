@@ -3,122 +3,124 @@
  -->
 
 
-<aura:component description="SMS Texting Component from Proton 7 Group." 
-                implements="force:hasRecordId, flexipage:availableForAllPageTypes" 
-                access="global">
+ <aura:component description="SMS Texting Component from Proton 7 Group." implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global">
 
-    <!-- Attributes specified in .design file NOTE: access="global" -->
-    <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
-    <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
-    <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
-    <aura:attribute name="OurColor" type="String" access="global" />
-    <aura:attribute name="TheirColor" type="String" access="global"/>
-    <aura:attribute name="Link1" type="String" default="None"access="global" />
-    <aura:attribute name="Link2" type="String" default="None"access="global" />
 
-    <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
-    <aura:attribute name="selectedTab" type="String" default="feed"/>
-    <aura:attribute name="activeConversationId" type="Id"/>
-    <aura:attribute name="ShowConnectionIndicator" type="Boolean"/>
-
-    <!-- set a switch for showing the create New Conversation/Broadcast interface -->
-    <aura:attribute name="NewConversation" type="Boolean" default="false"/>
-    <aura:attribute name="NewBroadcast" type="Boolean" default="false"/>
-    <aura:attribute name="EditRecipients" type="Boolean" default="false"/>
-
-    <!-- set a switch for showing cancel X box on active tab -->
-    <aura:attribute name="CancelX" type="Boolean" default="false"/>
-
-    <!-- set a switch for indicating an updated Conversation -->
-    <aura:attribute name="UpdateConversationFlag" type="Boolean" default="false"/>
-    <aura:attribute name="UnreadConversationList" type="String[]" default=""/>
-    <!-- <aura:attribute name="activeConversation" type="Id" default=""/> -->
-
-    <!-- set up placeholder for dynamic tabs -->
-    <aura:attribute name="moretabs" type="Aura.Component[]"/>
-
-    <!-- retrieves UserId from Controller/APEX class -->
-    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
-    <aura:handler name="change" value="{!v.selectedTab}" action="{!c.onTabChange}"/>
-
-    <!-- handle the event when a conversation is selected     -->
-    <aura:handler name="SelectConversation" event="c:SelectConversation" action="{!c.onSelectConversation}"/>
-    <!-- handle the event when a newConversation is updated    -->
-    <aura:handler name="UpdateConversationFlag" event="c:UpdateConversationFlag" action="{!c.onUpdateConversationFlag}"/>
-    <!-- handle the event when user wants to edit Broadcast recipients    -->
-    <aura:handler name="EditRecipients" event="c:EditRecipients" action="{!c.onEditRecipients}"/>
-    <!-- handle the event when user cancels the edit Broadcast recipients    -->
-    <aura:handler name="CancelEdit" event="c:CancelEdit" action="{!c.onClickCancel}"/>
-
-    <!-- application wrapper -->
-
-    <lightning:card iconName="{!v.ShowHeader ? 'utility:chat' : ''}" title="{!v.ShowHeader ? 'Proton Text' : ''}" >
-
-        <aura:if isTrue="{!v.CancelX}">
-            <a class="cancel" onclick="{!c.onClickCancel}">×</a>
-        </aura:if>
+        <aura:attribute name="Conversation" type="Conversation__c" description="from SelectConversation event"/>
+        <aura:attribute name="selectedTab" type="String" default="feed"/>
+        <aura:attribute name="activeConversationId" type="Id"/>
+        <aura:attribute name="ShowConnectionIndicator" type="Boolean"/>
+        <aura:attribute name="ShowHeader" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="BroadcastEnabled" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="MmsOutEnabled" type="Boolean" default="true" access="global"/>
+        <aura:attribute name="SendFromEnabled" type="Boolean" default="false" access="global"/>
+        <aura:attribute name="ConversationSharing" type="String" access="global" default="Private" />
+        <aura:attribute name="OurColor" type="String" access="global" />
+        <aura:attribute name="TheirColor" type="String" access="global"/>
+        <aura:attribute name="Link1" type="String" access="global" default="None"/>
+        <aura:attribute name="Link2" type="String" access="global" default="None"/>
     
-        <!-- Conversation Feed -->
-        <lightning:tabset   aura:id="tabs" 
-                            variant="default"
-                            selectedTabId="{!v.selectedTab }"
-                            class="tabs" >
-        <aura:if isTrue="{!v.UpdateConversationFlag}">
-            <lightning:tab  id="feed"
-                            label="Conversations 🔴"
-                            class="slds-size_5-of-12">
-            <div class="slds-p-bottom_large">
-
-        <!-- TheirColor and recordId are passed to ConversationFeed.cmp    -->
-                <c:ConversationFeed 
-                        aura:id="ConversationFeed" 
-                        recordId="{!v.recordId}" 
-                        TheirColor="{#v.TheirColor}" 
-                        StandAlone="{#v.ShowHeader}"/>
-            </div>
-
-            <aura:if isTrue="{!v.BroadcastEnabled}">
-                <div class="group-button">
-                    <lightning:buttonIcon   iconName="utility:groups"
-                                            size="large"
-                                            onclick="{! c.onNewBroadcast }" 
-                                            alternativeText="Create Group" />
-                </div>
+        <!-- set a switch for showing the create New Conversation/Broadcast interface -->
+        <aura:attribute name="NewBroadcast" type="Boolean" default="false"/>
+        <aura:attribute name="NewConversation" type="Boolean" default="false"/>
+        <aura:attribute name="EditRecipients" type="Boolean" default="false"/>
+    
+        <!-- set a switch for showing cancel X box on active tab -->
+        <aura:attribute name="CancelX" type="Boolean" default="false"/>
+    
+        <!-- set a switch for indicating an updated Conversation -->
+        <aura:attribute name="UpdateConversationFlag" type="Boolean" default="false"/>
+        <aura:attribute name="UnreadConversationList" type="String[]" default=""/>
+    
+        <!-- set up placeholder for dynamic tabs -->
+        <aura:attribute name="moretabs" type="Aura.Component[]"/>
+    
+        <!-- retrieves UserId from Controller/APEX class -->
+        <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+        <aura:handler name="change" value="{!v.selectedTab}" action="{!c.onTabChange}"/>
+    
+        <!-- handle the event when a conversation is selected     -->
+        <aura:handler name="SelectConversation" event="c:SelectConversation" action="{!c.onSelectConversation}"/>
+        <!-- handle the event when a newConversation is updated    -->
+        <aura:handler name="UpdateConversationFlag" event="c:UpdateConversationFlag" action="{!c.onUpdateConversationFlag}"/>
+        <!-- handle the event when user wants to edit Broadcast recipients    -->
+        <aura:handler name="EditRecipients" event="c:EditRecipients" action="{!c.onEditRecipients}"/>
+        <!-- handle the event when user cancels the edit Broadcast recipients    -->
+        <aura:handler name="CancelEdit" event="c:CancelEdit" action="{!c.onClickCancel}"/>
+    
+        <!-- application wrapper -->
+    
+        <lightning:card iconName="{!v.ShowHeader ? 'utility:chat' : ''}" title="{!v.ShowHeader ? 'Proton Text' : ''}" >
+    
+            <c:StreamingAPIListener />
+    
+            <aura:if isTrue="{!v.CancelX}">
+                <a class="cancel" onclick="{!c.onClickCancel}">×</a>
             </aura:if>
-            <div class="new-button">
-                <lightning:button   name="New Conversation"
-                                    label="New Conversation"
-                                    onclick="{!c.onNewConversation}"/>
-            </div>
-            </lightning:tab>
-
-        <aura:set attribute="else">
-                   
-            <lightning:tab  id="feed"
-                            label="Conversations"
-                            class="slds-size_5-of-12">
-            <div class="slds-p-bottom_large">
-                <c:ConversationFeed aura:id="ConversationFeed" recordId="{!v.recordId}" TheirColor="{#v.TheirColor}" StandAlone="{#v.ShowHeader}"/>
-            </div>
-            <aura:if isTrue="{!v.BroadcastEnabled}">
-                <div class="group-button">
-                    <lightning:buttonIcon   iconName="utility:groups"
-                                            size="large"
-                                            onclick="{! c.onNewBroadcast }" 
-                                            alternativeText="Create Group" />
+     <!-- Conversation Feed -->
+            <lightning:tabset   aura:id="tabs" 
+                                variant="default"
+                                selectedTabId="{!v.selectedTab }"
+                                class="tabs" >
+            <aura:if isTrue="{!v.UpdateConversationFlag}">
+                    <lightning:tab  id="feed"
+                                    label="Conversations 🔴"
+                                    class="slds-size_5-of-12">
+                    <div class="slds-p-bottom_large">
+                        <c:ConversationFeed aura:id="ConversationFeed" recordId="{!v.recordId}" TheirColor="{#v.TheirColor}" StandAlone="{#v.ShowHeader}"/>
+                    </div>
+                    <aura:if isTrue="{!v.BroadcastEnabled}">
+                        <div class="group-button">
+                            <lightning:buttonIcon   iconName="utility:groups"
+                                                    size="large"
+                                                    onclick="{! c.onNewBroadcast }" 
+                                                    alternativeText="Create Group" />
+                        </div>
+                    </aura:if>
+                    <div class="new-button">
+                        <lightning:button   name="New Conversation"
+                                            label="New Conversation"
+                                            onclick="{!c.onNewConversation}"/>
+                    </div>
+                </lightning:tab>
+    
+            <aura:set attribute="else">
+                       
+                <lightning:tab  id="feed"
+                                label="Conversations"
+                                class="slds-size_5-of-12">
+                <div class="slds-p-bottom_large">
+                    <c:ConversationFeed aura:id="ConversationFeed" 
+                                        recordId="{!v.recordId}" 
+                                        TheirColor="{#v.TheirColor}" 
+                                        StandAlone="{#v.ShowHeader}"
+                                        ConversationSharing="{#v.ConversationSharing}"/>
                 </div>
+                <aura:if isTrue="{!v.BroadcastEnabled}">
+                    <div class="group-button">
+                        <lightning:buttonIcon   iconName="utility:groups"
+                                                size="large"
+                                                onclick="{! c.onNewBroadcast }" 
+                                                alternativeText="Create Group"
+                                                variant="brand" />
+                    </div>
+                </aura:if>
+                <div class="new-button">
+                    <lightning:button   name="New Conversation"
+                                        label="New Conversation"
+                                        onclick="{!c.onNewConversation}"
+                                        variant="brand"/>
+                </div>
+                </lightning:tab>
+            </aura:set>
             </aura:if>
-            <div class="new-button">
-                <lightning:button   name="New Conversation"
-                                    label="New Conversation"
-                                    onclick="{!c.onNewConversation}"/>
-            </div>
-            </lightning:tab>
-        </aura:set>
-        </aura:if>
-
-        <!-- Individual Conversation Tab -->
-            {!v.moretabs}
-        </lightning:tabset>
-    </lightning:card>
-</aura:component>
+    
+            <!-- Individual Conversation Tab -->
+                {!v.moretabs}
+    
+            </lightning:tabset>
+    
+        </lightning:card>
+    
+    </aura:component>
+    
